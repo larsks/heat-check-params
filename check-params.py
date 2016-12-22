@@ -40,13 +40,17 @@ def main():
 
     for path in args.input:
         LOG.info('checking %s', path)
-        with open(path) as fd:
-            template = yaml.load(fd)
         try:
+            with open(path) as fd:
+                template = yaml.load(fd)
             verify_params(template, params=template['parameters'])
         except KeyError as e:
             LOG.error('Unknown parameter in %s: %s',
                       path, e)
+            if not args._continue:
+                sys.exit(1)
+        except yaml.parser.ParserError as e:
+            LOG.error('Failed to parse %s: %s', path, e)
             if not args._continue:
                 sys.exit(1)
 
