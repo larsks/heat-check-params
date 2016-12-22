@@ -21,4 +21,8 @@ Use it like this:
 
 Or even:
 
-    find puppet -name '*.yaml' | xargs python check-params.py
+    find puppet -name '*.yaml' \! -name '*.j2.yaml' |
+    xargs python check-params.py
+
+We exclude the jinja templates there because there is a good chance
+they're not valid YAML until after they are processed.
